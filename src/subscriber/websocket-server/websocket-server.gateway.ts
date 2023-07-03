@@ -1,32 +1,45 @@
-import { WebSocketGateway, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage } from '@nestjs/websockets';
+import {
+   WebSocketGateway,
+   WebSocketServer,
+   OnGatewayConnection,
+   OnGatewayDisconnect,
+   SubscribeMessage,
+} from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
-import { WebsocketClientService } from '@subscriber/websocket-client/services/websocket-client.service';
-import { CreateWebsocketClientDto } from '@subscriber/websocket-client/dto/create-websocket-client.dto';
+import { io } from 'socket.io-client'; // Certifique-se de ter o pacote 'socket.io-client' instalado
+import * as Websocket from 'ws';
 
-@WebSocketGateway(2000, { cors: { origin: '*' } })
+@WebSocketGateway(8080, {
+   cors: {
+      origin: '*',
+   },
+})
 export class WebSocketServerGateway implements OnGatewayConnection, OnGatewayDisconnect {
    private readonly logger = new Logger(WebSocketServerGateway.name);
    @WebSocketServer() public server: Server;
 
-   constructor(private readonly websocketClientService: WebsocketClientService) { }
+   async handleConnection(client: Socket, ...args: any[]) {
+      console.log(`[WEBSOCKET-SERVER]: Socket client ${client.id} conectado`);
 
-   public async handleConnection(client: Socket) {
-      this.logger.log(`[WEBSOCKET-SERVER]: Socket client ${client.id} conectado`);
+      const ws = new Websocket(`wss://stream.binance.com:9443/ws/btcusdt@kline_15m`);
 
-      const websocketClient = new CreateWebsocketClientDto();
-      websocketClient.clientID = client.id;
-      await this.websocketClientService.createWebsocketClient(websocketClient);
+      ws.onopen = function () {
+         console.log('Connected');
+
+         ws.onmessage = function (event) {
+            console.log(event.data);
+            client.send(event.data);
+         };
+      };
    }
 
-   public async handleDisconnect(client: Socket) {
+   public handleDisconnect(client: Socket) {
       this.logger.log(`[WEBSOCKET-SERVER]: Delete Socket client ${client.id}`);
-
-      await this.websocketClientService.deleteWebsocketClientById(client.id);
    }
 
    @SubscribeMessage('message')
-   public handleMessage<T>(client: Socket, payload: T): void {
-      this.logger.log(`Messagem ${JSON.stringify(payload)} do socket client: ${client.id}`);
+   public handleMessage(client: Socket, payload: any): void {
+      console.log(`Messagem ${JSON.stringify(payload)} do socket client: ${client.id}`);
    }
 }
