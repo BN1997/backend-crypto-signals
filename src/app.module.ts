@@ -17,7 +17,7 @@ import config from '@config/db/ormconfig';
       AuthModule,
       JobsModule,
       LoggerModule,
-      SubscriberModule
+      SubscriberModule,
    ],
    controllers: [],
    providers: [],

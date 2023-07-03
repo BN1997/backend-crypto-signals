@@ -7,6 +7,7 @@ import { ErrorLogger } from '@logger/error/error.logger';
 import { WarnLogger } from '@logger/warn/warn.logger';
 import { UserProfile } from '@models/profiles/user.profile';
 import { Mapper } from '@nartc/automapper';
+import { WsAdapter } from '@nestjs/platform-ws';
 
 class Server {
    private static instance: Server;
@@ -41,18 +42,11 @@ class Server {
    private configureAppModule() {
       this.app.useGlobalFilters(new HttpExceptionFilter());
       this.app.enableCors({
-         allowedHeaders: [
-            'Origin',
-            'X-Requested-With',
-            'Content-Type',
-            'Accept',
-            'Authorization'
-         ],
+         allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
       });
-      this.app.useLogger([
-         this.app.get(ErrorLogger),
-         this.app.get(WarnLogger)
-      ]);
+      this.app.useLogger([this.app.get(ErrorLogger), this.app.get(WarnLogger)]);
+
+      this.app.useWebSocketAdapter(new WsAdapter(this.app));
    }
 
    private async listen() {
