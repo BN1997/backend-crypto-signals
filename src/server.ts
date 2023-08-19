@@ -27,7 +27,6 @@ class Server {
 
    private async initializateNestApplication() {
       this.addProfiles();
-
       await Promise.all([
          await this.createAppModule(),
          await this.configureAppModule(),

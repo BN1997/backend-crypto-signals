@@ -7,7 +7,6 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
-import { io } from 'socket.io-client'; // Certifique-se de ter o pacote 'socket.io-client' instalado
 import * as Websocket from 'ws';
 
 @WebSocketGateway(8080, {
@@ -28,7 +27,6 @@ export class WebSocketServerGateway implements OnGatewayConnection, OnGatewayDis
          console.log('Connected');
 
          ws.onmessage = function (event) {
-            console.log(event.data);
             client.send(event.data);
          };
       };
