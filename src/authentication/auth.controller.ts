@@ -4,8 +4,9 @@ import { LoginDto } from '@authentication/dto/login.dto';
 import { SigninDto } from '@authentication/dto/signin.dto';
 import { AuthService } from '@authentication/services/auth.service';
 import { AccessToken } from '@authentication/interfaces/access-token.interface';
+import { PrivateController } from '@common/controllers/private.controller';
 
-@Controller('auth')
+@Controller('api/auth')
 export class AuthController extends PublicController {
    constructor(private readonly authService: AuthService) {
       super();

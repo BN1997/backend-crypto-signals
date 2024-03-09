@@ -4,6 +4,7 @@ import {
    OnGatewayConnection,
    OnGatewayDisconnect,
    SubscribeMessage,
+   OnGatewayInit
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
@@ -14,7 +15,22 @@ import * as Websocket from 'ws';
       origin: '*',
    },
 })
-export class WebSocketServerGateway implements OnGatewayConnection, OnGatewayDisconnect {
+export class WebSocketServerGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
+
+   readonly client: WebSocket;
+
+   constructor() {
+      this.client = new Websocket(`wss://stream.binance.com:9443/ws/btcusdt@kline_15m`);
+
+      this.client.onopen = function () {
+         console.log('Connected');
+      };
+   }
+   
+   afterInit(server: any) {
+   }
+
+
    private readonly logger = new Logger(WebSocketServerGateway.name);
    @WebSocketServer() public server: Server;
 

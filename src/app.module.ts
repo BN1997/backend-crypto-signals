@@ -8,6 +8,7 @@ import { LoggerModule } from '@logger/logger.module';
 import { AuthMiddleware } from '@authentication/auth.middleware';
 import { SubscriberModule } from '@subscriber/subscriber.module';
 import config from '@config/db/ormconfig';
+import { ApiModule } from './api/api.module';
 
 @Module({
    imports: [
@@ -18,12 +19,13 @@ import config from '@config/db/ormconfig';
       JobsModule,
       LoggerModule,
       SubscriberModule,
+      ApiModule
    ],
    controllers: [],
    providers: [],
 })
 export class AppModule implements NestModule {
    configure(consumer: MiddlewareConsumer) {
-      consumer.apply(AuthMiddleware).forRoutes('*');
+      consumer.apply(AuthMiddleware).forRoutes('/api');
    }
 }

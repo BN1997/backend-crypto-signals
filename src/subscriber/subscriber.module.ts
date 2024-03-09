@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
 import { WebSocketServerGateway } from '@subscriber/websocket-server/websocket-server.gateway';
-import { WebSocketServerGateway2 } from './websocket-server/websocket-server2.gateway';
+import { BinanceGateway } from './websocket-server/websocket-server2.gateway';
+import { BinanceApi } from 'src/api/binance/binance.api';
+import { ApiModule } from 'src/api/api.module';
 
 @Module({
-   imports: [],
+   imports: [ApiModule],
    controllers: [],
    providers: [WebSocketServerGateway,
-       WebSocketServerGateway2
+       BinanceGateway
       ],
    exports: [],
 })
