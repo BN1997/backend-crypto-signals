@@ -14,9 +14,12 @@ import { EnvConfigService } from './env/env.service';
          envFilePath: `.env`,
       }),
       EnvConfigModule,
-      DataBaseConfigModule,
+      //DataBaseConfigModule,
    ],
    providers: [],
-   exports: [EnvConfigModule, DataBaseConfigModule],
+   exports: [EnvConfigModule, 
+      
+      //DataBaseConfigModule
+   ],
 })
 export class ConfigModule {}

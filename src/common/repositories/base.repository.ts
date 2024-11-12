@@ -1,5 +1,5 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { DeepPartial, DeleteResult, EntityManager, In, Repository, SelectQueryBuilder } from 'typeorm';
+import { DeepPartial, DeleteResult, EntityManager, FindOneOptions, In, Repository, SelectQueryBuilder } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { CoreEntity } from '@common/entities/base.entity';
 
@@ -56,12 +56,12 @@ export abstract class BaseRepository<T extends CoreEntity> {
          .catch((error) => Promise.reject(error));
    }
 
-   async getByAsync(expression: {}): Promise<T> {
+   async getByAsync(expression: {}, options?: FindOneOptions<T>): Promise<T> {
+      options ??= { where: expression };
+      options = { relations: this.relations, ...options };
+
       return await this.repository
-         .findOne({
-            where: expression,
-            relations: this.relations,
-         })
+         .findOne(options)
          .then((entity) => {
             if (!entity) {
                return Promise.reject(new NotFoundException('Entity not found.'));
@@ -93,39 +93,43 @@ export abstract class BaseRepository<T extends CoreEntity> {
    }
 
    async deleteEntityAsync(entity: T): Promise<T> {
-      return await this.repository.remove(entity)
-      .then(async (result) => Promise.resolve(result))
-      .catch((error) => Promise.reject(error));
+      return await this.repository
+         .remove(entity)
+         .then(async (result) => Promise.resolve(result))
+         .catch((error) => Promise.reject(error));
    }
 
    async deleteManyAsync(...entities: T[]): Promise<T[]> {
-      return await this.repository.remove(entities)
-      .then(async (result) => Promise.resolve(result))
-      .catch((error) => Promise.reject(error));
+      return await this.repository
+         .remove(entities)
+         .then(async (result) => Promise.resolve(result))
+         .catch((error) => Promise.reject(error));
    }
 
    async deleteManyByIdAsync(ids: string[]): Promise<DeleteResult> {
-      return await this.repository.delete({ id: In(ids) as any })
-      .then(async (result) => {
-         if (!result) {
-            return Promise.reject(new BadRequestException('Fail to deleteManyByIdAsync'));
-         }
+      return await this.repository
+         .delete({ id: In(ids) as any })
+         .then(async (result) => {
+            if (!result) {
+               return Promise.reject(new BadRequestException('Fail to deleteManyByIdAsync'));
+            }
 
-         Promise.resolve(result);
-      })
-      .catch((error) => Promise.reject(error));
+            Promise.resolve(result);
+         })
+         .catch((error) => Promise.reject(error));
    }
 
    async deleteByIdAsync(id: string): Promise<DeleteResult> {
-      return await this.repository.delete({ id: id as any })
-      .then(async (result) => {
-         if (!result) {
-            return Promise.reject(new BadRequestException('Fail to deleteByIdAsync'));
-         }
+      return await this.repository
+         .delete({ id: id as any })
+         .then(async (result) => {
+            if (!result) {
+               return Promise.reject(new BadRequestException('Fail to deleteByIdAsync'));
+            }
 
-         Promise.resolve(result);
-      })
-      .catch((error) => Promise.reject(error));
+            Promise.resolve(result);
+         })
+         .catch((error) => Promise.reject(error));
    }
 
    create(): T {

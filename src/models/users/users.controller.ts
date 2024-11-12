@@ -7,7 +7,7 @@ import { UpdateUserHistoricalDto, UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { PrivateController } from '@common/controllers/private.controller';
 
-@Controller('users')
+@Controller('api/users')
 export class UsersController extends PrivateController {
    constructor(private readonly userService: UserService) {
       super();

@@ -9,17 +9,19 @@ import { AuthMiddleware } from '@authentication/auth.middleware';
 import { SubscriberModule } from '@subscriber/subscriber.module';
 import config from '@config/db/ormconfig';
 import { ApiModule } from './api/api.module';
+import { TradesModule } from './models/trades/trades.module';
 
 @Module({
    imports: [
+      ApiModule,
       TypeOrmModule.forRoot(config),
       ConfigModule,
       UsersModule,
       AuthModule,
       JobsModule,
       LoggerModule,
-      SubscriberModule,
-      ApiModule
+      TradesModule
+      // SubscriberModule,
    ],
    controllers: [],
    providers: [],

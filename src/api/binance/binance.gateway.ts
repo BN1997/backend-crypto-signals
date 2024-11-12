@@ -1,11 +1,12 @@
 import {
+   WebSocketServer,
    WebSocketGateway,
    OnGatewayConnection,
    OnGatewayDisconnect,
    SubscribeMessage,
    OnGatewayInit,
 } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
+import { Socket, Server } from 'socket.io';
 import { BinanceApi } from 'src/api/binance/binance.api';
 import { RSI, SuperTrend } from '@debut/indicators';
 import { BaseWebSocketServer } from '@subscriber/websocket-server/baseWebsocketServer';
@@ -14,62 +15,62 @@ import { binancePipeline } from './pipelines/binance.pipeline';
 import { BinanceDataHandler } from './services/data.service';
 import { BinanceConfiguration } from './configuration/binance.configuration';
 import { BinanceOrderService } from './services/order.service';
-import { BinanceTradingStrategy } from './services/decision.service';
+import { BinanceDecision } from './services/decision.service';
 import { BinanceParseStage } from './pipelines/stages/parse.stage';
+import * as Websocket from 'ws';
 
-// flow = Parse > Data handler > Decision (Strategy) > Order 
+// flow = Parse > Data handler > Decision (Strategy) > Order
 
-@WebSocketGateway(8031, {
+@WebSocketGateway(5050, {
    cors: {
       origin: '*',
    },
+   namespace: 'BTCUSDT_BINANCE_20M_FULL_VENDIDO',
 })
-export 
-class BinanceGateway extends BaseWebSocketServer implements OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect {
+export class BinanceGateway
+   extends BaseWebSocketServer
+   implements OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect
+{
    constructor(
       readonly api: BinanceApi,
       readonly data: BinanceDataHandler,
       readonly order: BinanceOrderService,
-      readonly algorithm: BinanceTradingStrategy
+      readonly algorithm: BinanceDecision,
    ) {
-      super(BinanceConfiguration.urlBase  + BinanceConfiguration.symbols[0] + `@kline_${BinanceConfiguration.interval}`);
+      const url =
+         BinanceConfiguration.urlBase +
+         BinanceConfiguration.symbols[0] +
+         `@kline_${BinanceConfiguration.interval}`;
+      super(url);
    }
 
    async afterInit(server: any) {
-      this.data.initializeAsync().then(() =>
-         this.algorithm.recalculate()
-      );
+      await this.data.initializeAsync();
    }
 
-   onMessage(event: MessageEvent<string>): void {   
+   async onMessage(event: MessageEvent<string>) {
       const { data } = event;
 
       const pipeline = binancePipeline
          .appendStage(new BinanceParseStage())
-         .appendFunction((kline) =>
-            this.data.process(kline.k)
-         )
-         .appendFunction((kline) => 
-            this.algorithm.process(kline)
-         ) 
-         .appendFunction((decision) => 
-            this.order.process(decision)
-         )
+         .appendFunction((kline) => this.data.process(kline.k))
+         .appendFunction((kline) => this.algorithm.process(kline))
+         .appendFunction(async (decision) => await this.order.process(decision))
          .build();
 
-      const candles = pipeline(data, {});
-       
-      this.notifySubscribers([ ...candles ]);
+      const candles = await pipeline(data, {});
+
+      this.notifySubscribers([...candles]);
    }
 
    notifySubscribers(message: any) {
       const text = JSON.stringify(message);
-      const connectedClients = this.getClients() as any; 
-      
-      for (const connectedClient of connectedClients)  {
-         console.table(text);
-         connectedClient.send(text);
-      }   
+
+      this.server.emit('message', text);
+   }
+
+   protected notifyAllClients(message: string) {
+      this.server.sockets.emit('notification', message);
    }
 
    onOpen(): void {
@@ -78,10 +79,12 @@ class BinanceGateway extends BaseWebSocketServer implements OnGatewayConnection,
    async handleConnection(client: Socket, ...args: any[]) {
       console.log(`[WEBSOCKET-SERVER]: Socket client ${client.id} conectado`);
    }
-   public handleDisconnect(client: Socket) {
-   }
+
+   public handleDisconnect(client: Socket) {}
+   /*
    @SubscribeMessage('message')
    public handleMessage(client: Socket, payload: any): void {
-      console.log(`Messagem ${JSON.stringify(payload)} do socket client: ${client.id}`);
+      console.log(client)
    }
+      */
 }

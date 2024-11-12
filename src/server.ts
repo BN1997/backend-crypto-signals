@@ -8,6 +8,7 @@ import { WarnLogger } from '@logger/warn/warn.logger';
 import { UserProfile } from '@models/profiles/user.profile';
 import { Mapper } from '@nartc/automapper';
 import { WsAdapter } from '@nestjs/platform-ws';
+import { TradeProfile } from './models/trades/profiles/trade.profile';
 
 class Server {
    private static instance: Server;
@@ -43,9 +44,9 @@ class Server {
       this.app.enableCors({
          allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
       });
-      this.app.useLogger([this.app.get(ErrorLogger), this.app.get(WarnLogger)]);
+      //this.app.useLogger([this.app.get(ErrorLogger), this.app.get(WarnLogger)]);
 
-      this.app.useWebSocketAdapter(new WsAdapter(this.app));
+      //this.app.useWebSocketAdapter(new WsAdapter(this.app));
    }
 
    private async listen() {
@@ -55,7 +56,7 @@ class Server {
    }
 
    private addProfiles() {
-      Mapper.addProfile(UserProfile);
+      Mapper.addProfile(UserProfile).addProfile(TradeProfile);
    }
 }
 

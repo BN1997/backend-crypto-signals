@@ -12,7 +12,8 @@ const config: TypeOrmModuleOptions = {
    logging: ['query', 'migration', 'error'],
    entities: [__dirname + '/../**/*.entity.js'],
    autoLoadEntities: true,
-
+   retryAttempts: 1000,
+   logger: "advanced-console",
    // entities: [__dirname + '/**/*.entity.{js,ts}'],
    // entities: [User, UserVersion, UserLog],
    subscribers: [UserLogSubscriber],

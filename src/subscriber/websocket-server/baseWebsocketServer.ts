@@ -14,16 +14,20 @@ import {
 }
 
 export abstract class BaseWebSocketServer implements Teste {
-    @WebSocketServer() public server: Server;
+    @WebSocketServer() 
+    public server: Server;
     public ws: Websocket;
-    abstract onMessage(event): void;
-    abstract onOpen(): void;
-    url: string; // Método abstrato que deve ser implementado pelas subclasses
+
+    public url: string
 
     constructor(url) {
         this.url = url;
         this.initilizateWebSocket();
     }
+
+    abstract onMessage(event): void;
+
+    abstract onOpen(): void;
     
     protected initilizateWebSocket() {
         this.ws = new Websocket(this.url);
@@ -31,11 +35,5 @@ export abstract class BaseWebSocketServer implements Teste {
         this.ws.onmessage = (event) => this.onMessage(event);
     }
 
-    protected getClients() {
-        return this.server['clients'] ?? [];
-    }
-
-    protected sendAll() {
-        
-    }
+    protected getClients = () => this.server.sockets;
 }
