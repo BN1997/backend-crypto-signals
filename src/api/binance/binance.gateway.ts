@@ -81,10 +81,4 @@ export class BinanceGateway
    }
 
    public handleDisconnect(client: Socket) {}
-   /*
-   @SubscribeMessage('message')
-   public handleMessage(client: Socket, payload: any): void {
-      console.log(client)
-   }
-      */
 }
