@@ -10,7 +10,7 @@ import { ApiModule } from 'src/api/api.module';
    providers: [
       // WebSocketServerGateway,
       //  BinanceGateway
-      ],
+   ],
    exports: [],
 })
 export class SubscriberModule {}

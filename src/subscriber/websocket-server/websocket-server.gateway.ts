@@ -4,7 +4,7 @@ import {
    OnGatewayConnection,
    OnGatewayDisconnect,
    SubscribeMessage,
-   OnGatewayInit
+   OnGatewayInit,
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
@@ -16,7 +16,6 @@ import * as Websocket from 'ws';
    },
 })
 export class WebSocketServerGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
-
    readonly client: WebSocket;
 
    constructor() {
@@ -26,10 +25,8 @@ export class WebSocketServerGateway implements OnGatewayConnection, OnGatewayDis
          console.log('Connected');
       };
    }
-   
-   afterInit(server: any) {
-   }
 
+   afterInit(server: any) {}
 
    private readonly logger = new Logger(WebSocketServerGateway.name);
    @WebSocketServer() public server: Server;

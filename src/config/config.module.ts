@@ -17,8 +17,9 @@ import { EnvConfigService } from './env/env.service';
       //DataBaseConfigModule,
    ],
    providers: [],
-   exports: [EnvConfigModule, 
-      
+   exports: [
+      EnvConfigModule,
+
       //DataBaseConfigModule
    ],
 })

@@ -58,7 +58,7 @@
 //    },
 // })
 // export class BinanceGateway extends BaseWebSocketServer implements OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect {
-   
+
 //    private lines: Kline[] = [];
 //    private supertrendIndicator: SuperTrend;
 //    private rsiIndicator: RSI;
@@ -77,7 +77,7 @@
 //          limit: configuration.limit
 //        })
 //       .then(result => this.lines = result.map<Kline>(candle => ({
-//             t: candle.openTime, T: candle.closeTime, x: true, 
+//             t: candle.openTime, T: candle.closeTime, x: true,
 //             c: candle.close, h: candle.high, i: '15m',
 //             q: candle.volume, Q: candle.quoteVolume, o: candle.open,
 //             s: this._symbol, l: candle.low, v: candle.volume
@@ -105,9 +105,9 @@
 //       if (kline.k.x) {
 //          this.lines.shift();
 //          this.lines.push(kline.k);
-//          this.recalculate(); 
+//          this.recalculate();
 //       }
-   
+
 //       const supertrend = this.supertrendIndicator.momentValue(
 //          parseFloat(kline.k.h),
 //          parseFloat(kline.k.l),
@@ -122,11 +122,10 @@
 //          rsi,
 //          supertrend
 //       }
-      
 
 //       // PRIMEIRO BOT
 //       // rsi - 0  - 30
-//       // ultimo preço comprado 50.000  
+//       // ultimo preço comprado 50.000
 
 //       // SEGUNDO BOT
 //       // supertrend
@@ -137,13 +136,8 @@
 //       // cond: criar ordem de venda (alvo)
 //       // cond: criar ordem de venda (STOP)
 
-
-
-
 //       this.notifySubscribers(JSON.stringify((_data)));
 //    }
-
- 
 
 //    notifySubscribers(message: any) {
 //       const connectedClients = this.getClients();
@@ -153,7 +147,7 @@
 //       // for (const connectedClient of connectedClients)  {
 //       //    console.table(message);
 //       //    connectedClient.send(message);
-//       // }   
+//       // }
 //    }
 
 //    onOpen(): void {
@@ -169,10 +163,3 @@
 //       console.log(`Messagem ${JSON.stringify(payload)} do socket client: ${client.id}`);
 //    }
 // }
-
-
-
-
-
-
- 

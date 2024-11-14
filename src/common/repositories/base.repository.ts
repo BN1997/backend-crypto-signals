@@ -1,5 +1,13 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { DeepPartial, DeleteResult, EntityManager, FindOneOptions, In, Repository, SelectQueryBuilder } from 'typeorm';
+import {
+   DeepPartial,
+   DeleteResult,
+   EntityManager,
+   FindOneOptions,
+   In,
+   Repository,
+   SelectQueryBuilder,
+} from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { CoreEntity } from '@common/entities/base.entity';
 

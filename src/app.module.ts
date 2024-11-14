@@ -20,7 +20,7 @@ import { TradesModule } from './models/trades/trades.module';
       AuthModule,
       JobsModule,
       LoggerModule,
-      TradesModule
+      TradesModule,
       // SubscriberModule,
    ],
    controllers: [],
