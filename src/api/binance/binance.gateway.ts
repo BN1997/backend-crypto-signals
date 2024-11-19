@@ -7,7 +7,7 @@ import {
    OnGatewayInit,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
-import { BinanceApi } from 'src/api/binance/binance.api';
+import { BinanceApi } from 'src/@Application/services/binance/binanceApi.service';
 import { RSI, SuperTrend } from '@debut/indicators';
 import { BaseWebSocketServer } from '@subscriber/websocket-server/baseWebsocketServer';
 import { Kline } from './models/kline.model';

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
-import { BinanceController } from './binance.controller';
-import { BinanceApi } from './binance.api';
+import { BinanceController } from 'src/@Application/controllers/binance.controller';
+import { BinanceApi } from 'src/@Application/services/binance/binanceApi.service';
+//import { BinanceApi } from './binance.api';
 import { BinanceDataHandler } from './services/data.service';
 import { BinanceOrderService } from './services/order.service';
 import { BinanceDecision } from './services/decision.service';

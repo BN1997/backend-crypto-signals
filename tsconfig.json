@@ -22,6 +22,10 @@
       "@exceptions/*": ["src/template/exceptions/*"],
       "@authentication/*": ["src/authentication/*"],
       "@subscriber/*": ["src/subscriber/*"],
+
+      /////
+      "@controllers": ["src/Application/controllers/*"],
+      "@dtos": ["src/@Application/dtos/*"],
     },
     "incremental": true,
     "skipLibCheck": true,

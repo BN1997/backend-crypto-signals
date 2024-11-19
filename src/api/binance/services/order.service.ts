@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { BinanceApi } from '../binance.api';
+import { BinanceApi } from 'src/@Application/services/binance/binanceApi.service';
 import { Decision } from './decision.service';
 import { TradeService } from 'src/models/trades/services/trades.service';
 import { TradeCreateDto } from 'src/models/trades/dtos/create.dto';

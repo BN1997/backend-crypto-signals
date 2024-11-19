@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { BinanceApi } from '../binance.api';
+import { BinanceApi } from 'src/@Application/services/binance/binanceApi.service';
 import { BinanceConfiguration } from '../configuration/binance.configuration';
 import { RSI, SuperTrend } from '@debut/indicators';
 import { KlineEvent } from '../models/kline-event.model';
